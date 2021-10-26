@@ -8,8 +8,8 @@ import {
   // InputLabel,
   // MenuItem,
   // Select,
-} from "@material-ui/core";
-import Loading from "./Loading";
+} from "@mui/material";
+import Loading from "../Loading";
 // import useSettings from 'src/hooks/useSettings';
 
 const PREFIX = "BarcodeScanner";
@@ -60,13 +60,7 @@ const Root = styled("div")({
 //   { value: 'code_93_reader', name: 'Code 93' },
 // ];
 
-export function BarcodeScanner({
-  open,
-  setOpen,
-  setCode,
-  stopBarcodeScanner,
-  setStopBarcodeScanner,
-}) {
+export function BarcodeScanner({ handleClose, setCode }) {
   // const { settings, saveSettings } = useSettings();
   // const [barcodeType, setBarcodeType] = useState(
   //   settings.barcodeType || 'code_128_reader'
@@ -163,21 +157,19 @@ export function BarcodeScanner({
 
     Quagga.onDetected((result) => {
       setCode(result.codeResult.code);
-      setOpen(false);
+      handleClose();
       Quagga.offDetected();
       Quagga.offProcessed();
       Quagga.stop();
     });
-  }, [setCode, setOpen /* , barcodeType */]);
+  }, [setCode, handleClose /* , barcodeType */]);
 
   useEffect(() => {
-    if (!open || stopBarcodeScanner) {
-      Quagga.offDetected();
-      Quagga.offProcessed();
-      Quagga.stop();
-      setStopBarcodeScanner(false);
-    }
-  }, [open, stopBarcodeScanner, setStopBarcodeScanner]);
+    console.log("close");
+    Quagga.offDetected();
+    Quagga.offProcessed();
+    Quagga.stop();
+  }, [handleClose]);
 
   // const handleChange = value => {
   //   setLoading(true);
@@ -219,9 +211,6 @@ export function BarcodeScanner({
 }
 
 BarcodeScanner.propTypes = {
-  open: PropTypes.bool.isRequired,
-  setOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   setCode: PropTypes.func.isRequired,
-  stopBarcodeScanner: PropTypes.bool.isRequired,
-  setStopBarcodeScanner: PropTypes.func.isRequired,
 };

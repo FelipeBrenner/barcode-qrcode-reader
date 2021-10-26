@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import QrReader from "react-qr-reader";
-import Loading from "./Loading";
+import Loading from "../Loading";
 
 const PREFIX = "QRCodeScanner";
 
@@ -14,7 +14,7 @@ const classes = {
 const Root = styled("div")({
   [`& .${classes.qrreader}`]: {
     "& section > div": {
-      "box-shadow": "white 0px 0px 0px 2px inset !important",
+      boxShadow: "white 0px 0px 0px 2px inset !important",
     },
   },
   [`& .${classes.loading}`]: {
@@ -22,7 +22,7 @@ const Root = styled("div")({
   },
 });
 
-export function QRCodeScanner({ setOpen, setCode }) {
+export function QRCodeScanner({ handleClose, setCode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export function QRCodeScanner({ setOpen, setCode }) {
   const handleScan = (data) => {
     if (data) {
       setCode(data);
-      setOpen(false);
+      handleClose();
     }
   };
 
@@ -63,6 +63,6 @@ export function QRCodeScanner({ setOpen, setCode }) {
 }
 
 QRCodeScanner.propTypes = {
-  setOpen: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired,
   setCode: PropTypes.func.isRequired,
 };
