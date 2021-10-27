@@ -64,7 +64,12 @@ export function Home() {
           </IconButton>
         </Grid>
         <Grid item xs={12}>
-          <TextField value={code} label="Código escaneado" disabled />
+          <TextField
+            value={code}
+            label="Código escaneado"
+            disabled
+            sx={{ width: 320 }}
+          />
         </Grid>
       </Grid>
       <BarcodeDialog

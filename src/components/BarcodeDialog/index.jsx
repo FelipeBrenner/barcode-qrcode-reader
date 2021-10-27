@@ -34,7 +34,7 @@ export function BarcodeDialog({ open, setOpen, setCode }) {
       <DialogTitle id="alert-dialog-title">
         <Grid
           container
-          justify="space-between"
+          justifyContent="space-between"
           direction="row"
           alignItems="center"
           wrap="nowrap"

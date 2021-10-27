@@ -29,6 +29,7 @@ const Root = styled("div")({
       left: "0",
       top: "0",
     },
+    marginBottom: 0,
   },
   [`& .${classes.formControl}`]: {
     width: 180,
@@ -60,7 +61,7 @@ export function BarcodeScanner({ setCode, open, setOpen }) {
         },
         numOfWorkers: navigator.hardwareConcurrency,
         decoder: {
-          readers: ["code_39_reader", "code_128_reader"],
+          readers: ["code_39_reader", "code_128_reader", "ean_reader"],
         },
         locate: true,
         multiple: false,
