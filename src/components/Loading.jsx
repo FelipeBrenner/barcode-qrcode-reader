@@ -12,9 +12,7 @@ const Loading = ({ message }) => (
   >
     <CircularProgress />
     <Box mt={3}>
-      <Typography variant="h5" color="textPrimary">
-        {message || "Carregando..."}
-      </Typography>
+      <Typography>{message || "Carregando..."}</Typography>
     </Box>
   </Box>
 );

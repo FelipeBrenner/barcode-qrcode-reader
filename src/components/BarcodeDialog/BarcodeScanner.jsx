@@ -2,15 +2,8 @@ import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import Quagga from "quagga";
-import {
-  Box,
-  // FormControl,
-  // InputLabel,
-  // MenuItem,
-  // Select,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import Loading from "../Loading";
-// import useSettings from 'src/hooks/useSettings';
 
 const PREFIX = "BarcodeScanner";
 
@@ -46,25 +39,7 @@ const Root = styled("div")({
   },
 });
 
-// const barcodeTypes = [
-//   { value: 'code_128_reader', name: 'Code 128' },
-//   { value: 'ean_reader', name: 'EAN' },
-//   { value: 'ean_8_reader', name: 'EAN-8' },
-//   { value: 'code_39_reader', name: 'Code 39' },
-//   { value: 'code_39_vin_reader', name: 'Code 39 VIN' },
-//   { value: 'codabar_reader', name: 'Codabar' },
-//   { value: 'upc_reader', name: 'UPC' },
-//   { value: 'upc_e_reader', name: 'UPC-e' },
-//   { value: 'i2of5_reader', name: 'I2of5' },
-//   { value: '2of5_reader', name: 'Standard 2 of 5' },
-//   { value: 'code_93_reader', name: 'Code 93' },
-// ];
-
-export function BarcodeScanner({ handleClose, setCode }) {
-  // const { settings, saveSettings } = useSettings();
-  // const [barcodeType, setBarcodeType] = useState(
-  //   settings.barcodeType || 'code_128_reader'
-  // );
+export function BarcodeScanner({ setCode, open, setOpen }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,13 +53,6 @@ export function BarcodeScanner({ handleClose, setCode }) {
             facingMode: "environment",
           },
           target: document.querySelector("#barcode-scanner"),
-          // area: {
-          //   // defines rectangle of the detection/localization area
-          //   top: '10%', // top offset
-          //   right: '10%', // right offset
-          //   left: '10%', // left offset
-          //   bottom: '10%', // bottom offset
-          // },
         },
         locator: {
           halfSample: true,
@@ -92,7 +60,7 @@ export function BarcodeScanner({ handleClose, setCode }) {
         },
         numOfWorkers: navigator.hardwareConcurrency,
         decoder: {
-          readers: ["code_39_reader"], // [`${barcodeType}`],
+          readers: ["code_39_reader", "code_128_reader"],
         },
         locate: true,
         multiple: false,
@@ -157,28 +125,20 @@ export function BarcodeScanner({ handleClose, setCode }) {
 
     Quagga.onDetected((result) => {
       setCode(result.codeResult.code);
-      handleClose();
+      setOpen(false);
       Quagga.offDetected();
       Quagga.offProcessed();
       Quagga.stop();
     });
-  }, [setCode, handleClose /* , barcodeType */]);
+  }, [setCode, setOpen]);
 
   useEffect(() => {
-    console.log("close");
-    Quagga.offDetected();
-    Quagga.offProcessed();
-    Quagga.stop();
-  }, [handleClose]);
-
-  // const handleChange = value => {
-  //   setLoading(true);
-  //   Quagga.offDetected();
-  //   Quagga.offProcessed();
-  //   Quagga.stop();
-  //   setBarcodeType(value);
-  //   saveSettings({ ...settings, barcodeType: value });
-  // };
+    if (!open) {
+      Quagga.offDetected();
+      Quagga.offProcessed();
+      Quagga.stop();
+    }
+  }, [open]);
 
   return (
     <Root>
@@ -190,27 +150,12 @@ export function BarcodeScanner({ handleClose, setCode }) {
         maxHeight={loading ? "0px" : "800px"}
       />
       {loading && <Loading className={classes.loading} />}
-      {/* <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel>Tipo de código de barras</InputLabel>
-        <Select
-          value={barcodeType}
-          onChange={event => {
-            handleChange(String(event.target.value));
-          }}
-          label="Tipo de código de barras"
-        >
-          {barcodeTypes.map(type => (
-            <MenuItem key={type.value} value={type.value}>
-              {type.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
     </Root>
   );
 }
 
 BarcodeScanner.propTypes = {
-  handleClose: PropTypes.func.isRequired,
   setCode: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
 };

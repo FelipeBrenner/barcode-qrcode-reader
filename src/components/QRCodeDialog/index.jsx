@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   Dialog as DialogMui,
   DialogContent,
@@ -6,25 +7,24 @@ import {
   Grid,
   IconButton,
   SvgIcon,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { IoIosClose } from "react-icons/io";
-import { BarcodeScanner } from "./BarcodeScanner";
 import { QRCodeScanner } from "./QRCodeScanner";
 
-export function Dialog({
-  openBarcodeReader,
-  openQrCodeReader,
-  handleClose,
-  setCode,
-}) {
+export function QRCodeDialog({ open, setOpen, setCode }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <DialogMui
-      open={openBarcodeReader || openQrCodeReader}
+      open={open}
       onClose={handleClose}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
@@ -40,7 +40,7 @@ export function Dialog({
           wrap="nowrap"
         >
           <Grid item>
-            Leitor de {openBarcodeReader ? "Código de Barras" : "QR Code"}
+            <Typography>Leitor de QR Code</Typography>
           </Grid>
           <Grid item>
             <IconButton onClick={handleClose}>
@@ -57,12 +57,16 @@ export function Dialog({
           <DialogContentText id="alert-dialog-description">
             Essa funcionalidade requer https
           </DialogContentText>
-        ) : openBarcodeReader ? (
-          <BarcodeScanner handleClose={handleClose} setCode={setCode} />
         ) : (
-          <QRCodeScanner handleClose={handleClose} setCode={setCode} />
+          <QRCodeScanner setCode={setCode} setOpen={setOpen} />
         )}
       </DialogContent>
     </DialogMui>
   );
 }
+
+QRCodeDialog.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+  setCode: PropTypes.func.isRequired,
+};

@@ -3,7 +3,8 @@ import { styled } from "@mui/material/styles";
 import { Grid, IconButton, SvgIcon, TextField } from "@mui/material";
 import { MdOutlineQrCodeScanner } from "react-icons/md";
 import { IoMdBarcode } from "react-icons/io";
-import { Dialog } from "./Dialog";
+import { BarcodeDialog } from "./BarcodeDialog";
+import { QRCodeDialog } from "./QRCodeDialog";
 
 const Root = styled("div")(() => ({
   [`& @global`]: {
@@ -40,11 +41,6 @@ export function Home() {
     setOpenQrCodeReader(true);
   };
 
-  const handleClose = () => {
-    setOpenBarcodeReader(false);
-    setOpenQrCodeReader(false);
-  };
-
   return (
     <Root>
       <Grid
@@ -71,10 +67,14 @@ export function Home() {
           <TextField value={code} label="Código escaneado" disabled />
         </Grid>
       </Grid>
-      <Dialog
-        openBarcodeReader={openBarcodeReader}
-        openQrCodeReader={openQrCodeReader}
-        handleClose={handleClose}
+      <BarcodeDialog
+        open={openBarcodeReader}
+        setOpen={setOpenBarcodeReader}
+        setCode={setCode}
+      />
+      <QRCodeDialog
+        open={openQrCodeReader}
+        setOpen={setOpenQrCodeReader}
         setCode={setCode}
       />
     </Root>
